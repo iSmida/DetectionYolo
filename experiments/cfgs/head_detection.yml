@@ -1,0 +1,54 @@
+MODEL:
+  SSDS: yolo_v3
+  NETS: mobilenet_v2
+  IMAGE_SIZE: [640, 640]
+  NUM_CLASSES: 2
+  FEATURE_LAYER: [[['B','B','B'], [12,'B','B','B'], [5,'B','B','B']],
+                  [[64,64,64], [32,48,48,48], [24,32,32,32]]]
+#SIZES: [[416, 416], [416, 416], [416, 416]]
+  ASPECT_RATIOS: [[[0.0688158477,0.147654668], [0.0777793378,0.1870524889], [0.1253793767,0.2571660046]],
+                  [[0.0877998382,0.1222654256], [0.0832495405,0.2030609968], [0.1155452966,0.1713790324]],
+                  [[0.1504311988,0.2376979967], [0.1522014517,0.3447748968], [0.1934468498,0.4586443547]], ]
+
+TRAIN:
+  MAX_EPOCHS: 100
+  CHECKPOINTS_EPOCHS: 1
+  BATCH_SIZE: 16
+  TRAINABLE_SCOPE: 'base,extras,loc,conf'
+  RESUME_SCOPE: 'base,extras,loc,conf'
+  OPTIMIZER:
+    OPTIMIZER: sgd
+    LEARNING_RATE: 0.01
+    MOMENTUM: 0.9
+    WEIGHT_DECAY: 0.0001
+  LR_SCHEDULER:
+    SCHEDULER: multi_step
+    STEPS: [60,80]
+    GAMMA: 0.3126
+TEST:
+  BATCH_SIZE: 1
+  TEST_SCOPE: [60, 80]
+
+MATCHER:
+  MATCHED_THRESHOLD: 0.5
+  UNMATCHED_THRESHOLD: 0.5
+  NEGPOS_RATIO: 3
+
+POST_PROCESS:
+  SCORE_THRESHOLD: 0.01
+  IOU_THRESHOLD: 0.6
+  MAX_DETECTIONS: 100
+
+            
+
+DATASET:
+  DATASET: 'coco'
+  DATASET_DIR: '/data/'
+  TRAIN_SETS: ['head_difficult_train' , 'head_office_train','head_squatting_train' , 'head_steve_train','head_v2_benchmark_0_train','head_CrowdHuman_train']
+  TEST_SETS:  ['head_v2_benchmark_0_train']
+  PROB: 0.6
+
+EXP_DIR: './experiments/models/ssd_resnet101_coco_aifi'
+LOG_DIR: './experiments/models/ssd_resnet101_coco_aifi'
+RESUME_CHECKPOINT: './weights/yolo_v3_mobilenet_v2_voc_epoch_200.pth'
+PHASE: ['train']
